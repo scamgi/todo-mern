@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.scss";
+import axios from "axios";
 
 function App() {
   const [tasks, setTasks] = useState([
@@ -11,24 +12,25 @@ function App() {
   const [newTaskName, setNewTaskName] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/tasks", { method: "GET" })
-      .then((res) => res.json())
-      .then((data) => setTasks(data));
+    axios
+      .get("http://localhost:5000/tasks")
+      .then((res) => {
+        setTasks(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   async function createNewTask() {
     try {
-      const newTask = { name: newTaskName, completed: false };
-      const response = await fetch("http://localhost:5000/api/tasks", {
-        method: "POST",
-        body: JSON.stringify(newTask),
-      });
-      const newTaskWithId = await response.json();
-      console.log(newTaskWithId);
+      if (!newTaskName) throw new Error("Task name not specified.");
+      const task = { name: newTaskName, completed: false };
+      const newTask = await axios.post("http://localhost:5000/tasks", task);
+      setTasks([...tasks, newTask.data]);
       setNewTaskName("");
-      setTasks([...tasks, newTaskWithId]);
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   }
 
@@ -80,7 +82,7 @@ function App() {
             value={newTaskName}
             onChange={(e) => setNewTaskName(e.target.value)}
           />
-          <button className="new-task__btn" onClick={(e) => createNewTask()}>
+          <button className="new-task__btn" onClick={() => createNewTask()}>
             +
           </button>
         </div>
@@ -89,9 +91,9 @@ function App() {
           <div className="todo__list">
             {tasks
               .filter((task) => task.completed === false)
-              .map((task) => {
+              .map((task, i) => {
                 return (
-                  <div className="todo__list__element" key={task.id}>
+                  <div key={i} className="todo__list__element">
                     <span className="todo__list__element__text">
                       {task.name}
                     </span>
@@ -119,7 +121,7 @@ function App() {
               .filter((task) => task.completed === true)
               .map((task) => {
                 return (
-                  <div className="done__list__element" key={task.id}>
+                  <div className="done__list__element" key={task._id}>
                     <span className="done__list__element__text">
                       {task.name}
                     </span>
