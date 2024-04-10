@@ -26,8 +26,8 @@ function App() {
     try {
       if (!newTaskName) throw new Error("Task name not specified.");
       const task = { name: newTaskName, completed: false };
-      const newTask = await axios.post("http://localhost:5000/tasks", task);
-      setTasks([...tasks, newTask.data]);
+      const response = await axios.post("http://localhost:5000/tasks", task);
+      setTasks([...tasks, response.data]);
       setNewTaskName("");
     } catch (error) {
       console.log(error);
@@ -50,16 +50,13 @@ function App() {
     }
   }
 
-  async function remove(id) {
+  async function remove(_id) {
     try {
-      const response = await fetch("http://localhost:5000/api/tasks/" + id, {
-        method: "DELETE",
-      });
-      const responseJson = await response.json();
-      console.log(responseJson);
-      setTasks(tasks.filter((p) => p.id !== id));
+      await axios.delete(`http://localhost:5000/tasks/${_id}`);
+      const temp = tasks.filter((p) => p._id !== _id);
+      setTasks(temp);
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   }
 
@@ -97,7 +94,7 @@ function App() {
                     </button>
                     <button
                       className="todo__list__element__delete"
-                      onClick={() => remove(task.id)}
+                      onClick={() => remove(task._id)}
                     >
                       x
                     </button>
@@ -117,6 +114,12 @@ function App() {
                     <span className="done__list__element__text">
                       {task.name}
                     </span>
+                    <button
+                      className="done__list__element__delete"
+                      onClick={() => remove(task._id)}
+                    >
+                      x
+                    </button>
                   </div>
                 );
               })}

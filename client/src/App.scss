@@ -105,9 +105,16 @@ main {
   background-color: $bg-todo-list-element;
   border-radius: 10px;
   padding: 20px;
+  display: grid;
+  grid-template-columns: auto 30px;
+  column-gap: 5px;
 }
 
 .done__list__element__text {
   color: $done__list__element__text;
   text-decoration: line-through;
+}
+
+.done__list__element__delete {
+  cursor: pointer;
 }
