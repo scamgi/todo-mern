@@ -10,10 +10,11 @@ function App() {
     },
   ]);
   const [newTaskName, setNewTaskName] = useState("");
+  const API_URL = "/api/tasks";
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/tasks")
+      .get(API_URL)
       .then((res) => {
         setTasks(res.data);
       })
@@ -26,7 +27,7 @@ function App() {
     try {
       if (!newTaskName) throw new Error("Task name not specified.");
       const task = { name: newTaskName, completed: false };
-      const response = await axios.post("http://localhost:5000/tasks", task);
+      const response = await axios.post(API_URL, task);
       setTasks([...tasks, response.data]);
       setNewTaskName("");
     } catch (error) {
@@ -46,7 +47,7 @@ function App() {
 
   async function markAsCompleted(_id) {
     try {
-      const task = await axios.put(`http://localhost:5000/tasks/${_id}`, {
+      const task = await axios.put(`${API_URL}/${_id}`, {
         completed: true,
       });
       // update the tasks list by creating a new array and updating the completed property.
@@ -62,7 +63,7 @@ function App() {
 
   async function remove(_id) {
     try {
-      await axios.delete(`http://localhost:5000/tasks/${_id}`);
+      await axios.delete(`${API_URL}/${_id}`);
       const temp = tasks.filter((p) => p._id !== _id);
       setTasks(temp);
     } catch (error) {
