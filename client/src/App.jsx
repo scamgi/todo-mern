@@ -34,30 +34,22 @@ function App() {
     }
   }
 
-  // TODO fix CORS policy
-  async function markAsCompleted(id) {
-    // try {
-    //   console.log('http://localhost:5000/api/tasks/' + id);
-    //   const response = await fetch('http://localhost:5000/api/tasks/' + id, {
-    //     method: 'PUT',
-    //     body: JSON.stringify({ completed: true })
-    //   });
-    //   const responseJson = await response.json();
-    //   console.log(responseJson);
-    //   if (responseJson && responseJson.id) {
-    //     const index = tasks.findIndex(p => p.id === id);
-    //     tasks[index].completed = true;
-    //     setTasks(tasks);
-    //   }
-    //   else {
-    //     console.error(responseJson);
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    // }
+  async function markAsCompleted(_id) {
+    try {
+      const task = await axios.put(`http://localhost:5000/tasks/${_id}`, {
+        completed: true,
+      });
+      // update the tasks list by creating a new array and updating the completed property.
+      const temp = tasks.map((p) => {
+        if (p._id === _id) return { ...p, completed: true };
+        return p;
+      });
+      setTasks(temp);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  // TODO fix CORS policy
   async function remove(id) {
     try {
       const response = await fetch("http://localhost:5000/api/tasks/" + id, {
@@ -99,7 +91,7 @@ function App() {
                     </span>
                     <button
                       className="todo__list__element__done"
-                      onClick={() => markAsCompleted(task.id)}
+                      onClick={() => markAsCompleted(task._id)}
                     >
                       v
                     </button>
