@@ -76,7 +76,9 @@ function App() {
           </button>
         </div>
         <div className="todo">
-          <h1 className="todo__title">Tasks to do - 4</h1>
+          <h1 className="todo__title">
+            Tasks to do - {tasks.filter((p) => p.completed === false).length}
+          </h1>
           <div className="todo__list">
             {tasks
               .filter((task) => task.completed === false)
@@ -104,7 +106,9 @@ function App() {
           </div>
         </div>
         <div className="done">
-          <h1 className="done__title">Done - 1</h1>
+          <h1 className="done__title">
+            Done - {tasks.filter((p) => p.completed === true).length}
+          </h1>
           <div className="done__list">
             {tasks
               .filter((task) => task.completed === true)
