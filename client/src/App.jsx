@@ -34,6 +34,16 @@ function App() {
     }
   }
 
+  async function onPressEnter(event) {
+    try {
+      if (event.key === "Enter") {
+        await createNewTask();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async function markAsCompleted(_id) {
     try {
       const task = await axios.put(`http://localhost:5000/tasks/${_id}`, {
@@ -70,6 +80,7 @@ function App() {
             className="new-task__text"
             value={newTaskName}
             onChange={(e) => setNewTaskName(e.target.value)}
+            onKeyUp={onPressEnter}
           />
           <button className="new-task__btn" onClick={() => createNewTask()}>
             +
