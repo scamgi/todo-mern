@@ -8,6 +8,9 @@ const app = express();
 /* A middleware that parses the body of the request and makes it available in the req.body object. */
 app.use(express.json());
 
+// use taskRouter
+app.use("/api/tasks", taskRouter);
+
 // This code let you point to the index.html file during the production mode.
 if (process.env.NODE_ENV === "production") {
   const __dirname = path.resolve();
@@ -21,8 +24,5 @@ if (process.env.NODE_ENV === "production") {
     res.status(200).json({ alive: "True" });
   });
 }
-
-// use taskRouter
-app.use("/api/tasks", taskRouter);
 
 module.exports = app;
