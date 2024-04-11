@@ -10,7 +10,7 @@ function App() {
     },
   ]);
   const [newTaskName, setNewTaskName] = useState("");
-  const API_URL = "/api/tasks";
+  const API_URL = "https://todo-mern-3iya.onrender.com/api/tasks";
 
   useEffect(() => {
     axios
